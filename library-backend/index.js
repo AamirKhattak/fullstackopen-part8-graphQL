@@ -134,8 +134,6 @@ type Query {
   }
 
 `
-//TODO: 8.6 onward
-//
 const resolvers = {
   Query: {
       bookCount: () => books.length,
