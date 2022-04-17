@@ -67,9 +67,15 @@ const resolvers = {
       } else if (author) { //TODO:
         return Book.find({ author: author });
       } else if (genre) {
-        return Book.find({ genre: { $in: genre } });
+        return Book.find({ genre: { $in: genre } }).populate('author', {
+          name: 1,
+          born: 1
+        });
       }
-      return Book.find({});
+      return Book.find({}).populate('author', {
+        name: 1,
+        born: 1
+      });
     },
     allAuthors: async () => {
       return Author.find({});
