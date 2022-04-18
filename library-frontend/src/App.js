@@ -3,7 +3,9 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
-import { useApolloClient } from "@apollo/client";
+
+import { useApolloClient, useQuery } from "@apollo/client";
+import { Me } from "./queries";
 
 const Notify = ({ errorMessage }) => {
   if (!errorMessage) {
@@ -12,12 +14,15 @@ const Notify = ({ errorMessage }) => {
   return <div style={{ color: "red" }}>{errorMessage}</div>;
 };
 
+//TODO: 8.20 recommended partialy done
 const App = () => {
   const [page, setPage] = useState("authors");
   const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null);
 
   const apolloClient = useApolloClient();
+  const currUser = useQuery(Me);
+  const {favoriteGenre} = currUser.data.me;
 
   const notify = (message) => {
     setErrorMessage(message);
@@ -42,6 +47,7 @@ const App = () => {
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         {token && <button onClick={() => setPage("add")}>add book</button>}
+        {token && <button onClick={() => setPage("recommendedBooks")}>recommended</button>}
         {!token && <button onClick={() => setPage("login")}>login</button>}
         {token && <button onClick={handleLogout}>Logout</button>}
       </div>
@@ -49,6 +55,7 @@ const App = () => {
       <Notify errorMessage={errorMessage} />
       <Authors show={page === "authors"} setError={notify} token={token}/>
       <Books show={page === "books"} />
+      <Books show={page === "recommendedBooks"} recommendedGenre="gql" />
       <NewBook show={page === "add"} setError={notify} />
       <Login show={page === "login"} setError={notify} setToken={setToken} redirectToPage={redirectToPage} />
     </div>
