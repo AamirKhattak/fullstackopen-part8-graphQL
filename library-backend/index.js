@@ -7,9 +7,9 @@ const mongoose = require("mongoose");
 const Book = require("./models/book");
 const Author = require("./models/author");
 const User = require("./models/user");
-// MONGODB_URI=mongodb+srv://aamirkhattak:mongoDB.1234@cluster0.22bwu.mongodb.net/bloglist-app?retryWrites=true&w=majority
-const MONGODB_URI =
-  "mongodb+srv://aamirkhattak:mongoDB.1234@cluster0.22bwu.mongodb.net/library?retryWrites=true&w=majority";
+
+const config = require("./utils/config")
+const MONGODB_URI = config.MONGODB_URI;
 
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
