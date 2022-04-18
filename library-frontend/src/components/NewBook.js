@@ -9,9 +9,10 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
+  const { setError } = props;
   const [addBook] = useMutation(ADD_BOOK, {
-    onError: (error) => console.error(error),
-    refetchQueries: [{query: ALL_BOOKS}, {query: ALL_AUTHORS}]
+    onError: (error) => setError(error.graphQLErrors[0].message),
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
   });
 
   if (!props.show) {
@@ -21,7 +22,7 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault();
     console.log("add book...");
-    const publishedYear = Number(published)
+    const publishedYear = Number(published);
 
     addBook({ variables: { title, author, published: publishedYear, genres } });
 
