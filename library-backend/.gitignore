@@ -1,2 +1,4 @@
 node_modules
 .env
+utils/refereshdb.js
+utils/startData.js

@@ -6,6 +6,8 @@ import Login from "./components/Login";
 
 import { useApolloClient, useQuery, useSubscription } from "@apollo/client";
 import { BOOK_ADDED, Me, ALL_BOOKS } from "./queries";
+import BooksByRecommendation from "./components/BooksByRecommendation";
+import BooksByGenre from "./components/BooksByGenre";
 
 const Notify = ({ errorMessage }) => {
   if (!errorMessage) {
@@ -14,7 +16,7 @@ const Notify = ({ errorMessage }) => {
   return <div style={{ color: "red" }}>{errorMessage}</div>;
 };
 
-//TODO: 8.20 recommended partialy done
+//TODO: 8.26 pending n+1
 //TODO: 8.22 Up-to-date cache and book recommendations
 //---------------------------------------------------------
 
@@ -24,6 +26,7 @@ const App = () => {
   const [token, setToken] = useState(null);
 
   const apolloClient = useApolloClient();
+  const allBooks = useQuery(ALL_BOOKS);
   const currUser = useQuery(Me);
   let favoriteGenre;
   // if(token && currUser.loading === false) favoriteGenre = currUser.data.me.favoriteGenre ? currUser.data.me.favoriteGenre: null ;
@@ -35,7 +38,6 @@ const App = () => {
     }, 5000);
   };
 
-
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       console.log(subscriptionData);
@@ -45,11 +47,17 @@ const App = () => {
       apolloClient.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
         return {
           allBooks: allBooks.concat(bookAdded),
-        }
-      })
+        };
+      });
     },
   });
 
+  if (allBooks.loading) return <div>loading...</div>;
+  if (currUser.loading && !token) {
+    return <div>loading...</div>;
+  } else {
+    favoriteGenre = currUser.data.me.favoriteGenre;
+  }
 
   const handleLogout = () => {
     if (window.confirm("do you want to logout?")) {
@@ -60,6 +68,7 @@ const App = () => {
   };
 
   const redirectToPage = (pageName) => setPage(pageName);
+  console.log(currUser);
   console.log(favoriteGenre);
 
   return (
@@ -79,8 +88,8 @@ const App = () => {
 
       <Notify errorMessage={errorMessage} />
       <Authors show={page === "authors"} setError={notify} token={token} />
-      <Books show={page === "books"} />
-      <Books show={page === "recommendedBooks"} recommendedGenre="database" />
+      <BooksByGenre show={page === "books"} books={allBooks.data.allBooks} />
+      <BooksByRecommendation show={page === "recommendedBooks"} favoriteGenre={favoriteGenre} />
       <NewBook show={page === "add"} setError={notify} />
       <Login
         show={page === "login"}

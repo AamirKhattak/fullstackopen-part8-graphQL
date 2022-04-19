@@ -3,16 +3,22 @@ import { useState } from "react";
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from "../queries.js";
 
 const NewBook = (props) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [published, setPublished] = useState("");
+  const [title, setTitle] = useState(`test book name ${new Date().getTime()}`);
+  const [author, setAuthor] = useState("aamir");
+  const [published, setPublished] = useState("1990");
   const [genre, setGenre] = useState("");
-  const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState(['gql', 'general']);
 
   const { setError } = props;
   const [addBook] = useMutation(ADD_BOOK, {
     onError: (error) => setError(error.graphQLErrors[0].message),
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    update: (cache, response) => {
+      cache.updateQuery({query: ALL_BOOKS}, ({allBooks}) => {
+        return {
+          allBooks: allBooks.concat(response.data.addBook)
+        }
+      })
+    }
   });
 
   if (!props.show) {
