@@ -41,6 +41,15 @@ export const ALL_BOOKS = gql`
   }
 `;
 
+export const BOOK_ADDED = gql`
+  subscription bookAdded{
+    bookAdded {
+      title
+      published
+    }
+  }
+`;
+
 export const ADD_BOOK = gql`
   mutation AddBook(
     $title: String!

@@ -4,8 +4,8 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 
-import { useApolloClient, useQuery } from "@apollo/client";
-import { Me } from "./queries";
+import { useApolloClient, useQuery, useSubscription } from "@apollo/client";
+import { BOOK_ADDED, Me } from "./queries";
 
 const Notify = ({ errorMessage }) => {
   if (!errorMessage) {
@@ -18,8 +18,6 @@ const Notify = ({ errorMessage }) => {
 //TODO: 8.22 Up-to-date cache and book recommendations
 //---------------------------------------------------------
 
-
-
 const App = () => {
   const [page, setPage] = useState("authors");
   const [errorMessage, setErrorMessage] = useState(null);
@@ -29,6 +27,13 @@ const App = () => {
   const currUser = useQuery(Me);
   let favoriteGenre;
   // if(token && currUser.loading === false) favoriteGenre = currUser.data.me.favoriteGenre ? currUser.data.me.favoriteGenre: null ;
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+      alert(subscriptionData.data.bookAdded.title);
+    },
+  });
 
   const notify = (message) => {
     setErrorMessage(message);
@@ -47,7 +52,6 @@ const App = () => {
 
   const redirectToPage = (pageName) => setPage(pageName);
   console.log(favoriteGenre);
-  
 
   return (
     <div>
@@ -55,17 +59,26 @@ const App = () => {
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         {token && <button onClick={() => setPage("add")}>add book</button>}
-        {token && <button onClick={() => setPage("recommendedBooks")}>recommended</button>}
+        {token && (
+          <button onClick={() => setPage("recommendedBooks")}>
+            recommended
+          </button>
+        )}
         {!token && <button onClick={() => setPage("login")}>login</button>}
         {token && <button onClick={handleLogout}>Logout</button>}
       </div>
 
       <Notify errorMessage={errorMessage} />
-      <Authors show={page === "authors"} setError={notify} token={token}/>
+      <Authors show={page === "authors"} setError={notify} token={token} />
       <Books show={page === "books"} />
-      <Books show={page === "recommendedBooks"} recommendedGenre='database' />
+      <Books show={page === "recommendedBooks"} recommendedGenre="database" />
       <NewBook show={page === "add"} setError={notify} />
-      <Login show={page === "login"} setError={notify} setToken={setToken} redirectToPage={redirectToPage} />
+      <Login
+        show={page === "login"}
+        setError={notify}
+        setToken={setToken}
+        redirectToPage={redirectToPage}
+      />
     </div>
   );
 };
