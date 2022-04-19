@@ -15,6 +15,11 @@ const Notify = ({ errorMessage }) => {
 };
 
 //TODO: 8.20 recommended partialy done
+//TODO: 8.22 Up-to-date cache and book recommendations
+//---------------------------------------------------------
+
+
+
 const App = () => {
   const [page, setPage] = useState("authors");
   const [errorMessage, setErrorMessage] = useState(null);
@@ -22,7 +27,8 @@ const App = () => {
 
   const apolloClient = useApolloClient();
   const currUser = useQuery(Me);
-  const {favoriteGenre} = currUser.data.me;
+  let favoriteGenre;
+  // if(token && currUser.loading === false) favoriteGenre = currUser.data.me.favoriteGenre ? currUser.data.me.favoriteGenre: null ;
 
   const notify = (message) => {
     setErrorMessage(message);
@@ -40,6 +46,8 @@ const App = () => {
   };
 
   const redirectToPage = (pageName) => setPage(pageName);
+  console.log(favoriteGenre);
+  
 
   return (
     <div>
@@ -55,7 +63,7 @@ const App = () => {
       <Notify errorMessage={errorMessage} />
       <Authors show={page === "authors"} setError={notify} token={token}/>
       <Books show={page === "books"} />
-      <Books show={page === "recommendedBooks"} recommendedGenre="gql" />
+      <Books show={page === "recommendedBooks"} recommendedGenre='database' />
       <NewBook show={page === "add"} setError={notify} />
       <Login show={page === "login"} setError={notify} setToken={setToken} redirectToPage={redirectToPage} />
     </div>
