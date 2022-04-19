@@ -5,7 +5,7 @@ import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 
 import { useApolloClient, useQuery, useSubscription } from "@apollo/client";
-import { BOOK_ADDED, Me } from "./queries";
+import { BOOK_ADDED, Me, ALL_BOOKS } from "./queries";
 
 const Notify = ({ errorMessage }) => {
   if (!errorMessage) {
@@ -28,19 +28,28 @@ const App = () => {
   let favoriteGenre;
   // if(token && currUser.loading === false) favoriteGenre = currUser.data.me.favoriteGenre ? currUser.data.me.favoriteGenre: null ;
 
-  useSubscription(BOOK_ADDED, {
-    onSubscriptionData: ({ subscriptionData }) => {
-      console.log(subscriptionData);
-      alert(subscriptionData.data.bookAdded.title);
-    },
-  });
-
   const notify = (message) => {
     setErrorMessage(message);
     setTimeout(() => {
       setErrorMessage(null);
     }, 5000);
   };
+
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+      const bookAdded = subscriptionData.data.bookAdded;
+      notify(`${bookAdded.title} added.`);
+
+      apolloClient.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(bookAdded),
+        }
+      })
+    },
+  });
+
 
   const handleLogout = () => {
     if (window.confirm("do you want to logout?")) {

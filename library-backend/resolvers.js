@@ -79,8 +79,12 @@ const resolvers = {
           invalidArgs: args,
         });
       }
-      pubsub.publish("BOOK_ADDED", { bookAdded: book });
-      return book;
+      const bookToReturned = await Book.findById(book._id).populate("author", {
+        name: 1,
+        born: 1,
+      });
+      pubsub.publish("BOOK_ADDED", { bookAdded: bookToReturned });
+      return bookToReturned;
     },
     addAuthor: async (root, args) => {
       const { name } = args;
@@ -125,4 +129,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers
+module.exports = resolvers;
