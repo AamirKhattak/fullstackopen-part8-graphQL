@@ -6,10 +6,13 @@ import Books from "./Books.js";
 
 export default function BooksByGenre(props) {
   const [genre, setGenre] = useState("");
-  
-  const booksByGenre = useQuery(ALL_BOOKS, {
-    variables: { genre: genre },
-  });
+
+  const useQueryOptions = {
+    variables: genre ? { genre: genre } : {},
+    pollInterval: 10000,
+  }
+  const booksByGenre = useQuery(
+    ALL_BOOKS, useQueryOptions);
 
   const allBooksGenres = useQuery(gql`
     query AllBooks {
@@ -20,12 +23,12 @@ export default function BooksByGenre(props) {
   `);
 
   let books = [];
-  if(genre && booksByGenre.loading === false){
-      books = booksByGenre.data.allBooks;
-  }else if (genre && booksByGenre.loading){
-    return <div>loading ...</div>
-  }else{
-      books = props.books;
+  if (genre && booksByGenre.loading === false) {
+    books = booksByGenre.data.allBooks;
+  } else if (genre && booksByGenre.loading) {
+    return <div>loading ...</div>;
+  } else {
+    books = props.books;
   }
 
   const getAllGenres = () => {

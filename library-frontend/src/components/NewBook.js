@@ -14,6 +14,7 @@ const NewBook = (props) => {
     onError: (error) => setError(error.graphQLErrors[0].message),
     update: (cache, response) => {
       cache.updateQuery({query: ALL_BOOKS}, ({allBooks}) => {
+        console.log(allBooks.concat(response.data.addBook));        
         return {
           allBooks: allBooks.concat(response.data.addBook)
         }
