@@ -1,7 +1,8 @@
 # fullstackopen-part8-graphQL
 
-These project are course work for GraphQL backend APIs implementation and integration with frontend.
+GraphQL backend APIs implementation and integration with frontend.
 
+![GraphQL Certificate](https://studies.cs.helsinki.fi/stats/api/certificate/fs-graphql/en/bc5abfb7a40829473017a358b28de7e1)
 
 These project cover concepts like:
 
