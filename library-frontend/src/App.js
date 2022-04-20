@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
@@ -36,6 +36,16 @@ const App = () => {
       setErrorMessage(null);
     }, 5000);
   };
+
+  console.log(currUser);
+  
+  // useEffect(() => {
+  //   if ( currUser.data ) {
+  //     const token = currUser.data.login.value
+  //     setToken(token)
+  //     localStorage.setItem('phonenumbers-user-token', token)
+  //   }
+  // }, [currUser.data])
 
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {

@@ -10,6 +10,12 @@ const { PubSub } = require("graphql-subscriptions");
 const pubsub = new PubSub();
 
 const resolvers = {
+  AllAuthors:{
+    bookCount: async (root) => {
+      const books = await Book.find({author: { $in: [root._id]}})
+      return books.length;
+    }
+  },
   Query: {
     me: async (root, args, context) => {
       return context.currentUser;
