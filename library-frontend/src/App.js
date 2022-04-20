@@ -17,7 +17,6 @@ const Notify = ({ errorMessage }) => {
 };
 
 //TODO: 8.26 pending n+1
-//TODO: 8.22 Up-to-date cache and book recommendations
 //---------------------------------------------------------
 
 const App = () => {
