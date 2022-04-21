@@ -4,8 +4,7 @@ GraphQL backend APIs implementation and integration with frontend.
 
 ![GraphQL Certificate](https://studies.cs.helsinki.fi/stats/api/certificate/fs-graphql/en/bc5abfb7a40829473017a358b28de7e1)
 
-These project cover concepts like:
-
+*Following were the course contents*
 ### Backend (nodejs)
 - Schemas
 - Queries, Mutations, Resolvers
