@@ -6,7 +6,7 @@ GraphQL backend APIs implementation and integration with frontend.
 
 These project cover concepts like:
 
-### Backend (node)
+### Backend (nodejs)
 - Schemas
 - Queries, Mutations, Resolvers
 - Apollo Server
@@ -17,7 +17,7 @@ These project cover concepts like:
 - Fragments
 - Subscriptions on the server `subscriptions-transport-ws graphql-subscriptions`
 
-### Frontend (react)
+### Frontend (reactjs)
 - Apollo Client
 - Making queries
 - Caching and Cache Updation
